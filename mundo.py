@@ -1,18 +1,41 @@
 from typing import Optional
+from excepciones import  *
 import csv
 
 class Libro:
-
-    def __str__(self):
-        return f"+CODIGO: {self.scib}\n+TITULO: {self.titulo}\n+PRECIO: {self.precio}"
-
 
     def __init__(self, scib:str, titulo: str, precio: int):
         self.scib= scib
         self.titulo= titulo
         self.precio = precio
 
+    def __str__(self):
+        return f"CODIGO: {self.scib}//TITULO: {self.titulo}//$PRECIO: {self.precio}"
 
+class Item:
+    def __init__(self, libro, cantidad):
+        self.libro = libro
+        self.cantidad = cantidad
+
+    def calcular_subtotal(self):
+        return self.libro.precio * self.cantidad
+
+
+class Bolsa:
+    def __init__(self):
+        self.items = []
+
+    def agregar_item(self, libro, cantidad):
+        self.items.append(Item(libro, cantidad))
+
+    def calcular_total(self):
+        total = 0
+        for item in self.items:
+            total += item.calcular_subtotal()
+            return total
+
+    def quitar_item(self, scib):
+        self.item = [item for item in self.items if item.scib != scib]
 class Usuario:
     def __init__(self, dni: str, nombre: str):
         self.dni: str = dni
@@ -23,6 +46,7 @@ class Usuario:
 
 class Biblioteca:
     def __init__(self):
+        self.bolsa = Bolsa()
         self.total_prestados = 0
         self.total_vendidos = 0
         self.total_devueltos= 0
@@ -30,13 +54,27 @@ class Biblioteca:
         self.libros = {}
         self.__cargar_catalogo()
 
+
     def __cargar_catalogo(self):
         with open("data/catalogo.csv") as file:
-            csv_data = csv.reader(file, delimiter="::")
+            csv_data = csv.reader(file, delimiter=":")
             libros = map(lambda data: Libro(data[0], data[1], int(data[2])), csv_data)
-            self.caatalogo = {lib.scib: lib for lib in libros}
+            self.catalogo = {lib.scib: lib for lib in libros}
+
+    def adicionar_ejemplar_al_catalogo(self, scib, titulo, precio):
+        if  scib == "" or titulo == "":
+            raise  EspaciosVacios(f"Rellenar todos los campos")
+        if scib not in self.libros.keys():
+            ejemplar = Libro(scib, titulo, precio)
+            self.libros[scib] = Libro(scib, titulo, precio)
+            return ejemplar
+        else:
+            raise EjemplarExistenteError(f"Ya existe un libro con el scib {scib}", scib)
 
 
+    def agregar_ejemplar_bolsa(self, scib, cantidad):
+        if scib in self.catalogo.keys():
+            self.bolsa.agregar_item(self.libros[scib], cantidad)
 
     def eliminar_libro(self, scib: str):
         self.libros.pop(scib)
@@ -75,6 +113,7 @@ class Biblioteca:
             return None
 
 
+
 class Prestado:
 
 
@@ -86,7 +125,4 @@ class Prestado:
 
     def agregar_a_prestados(self, dni:str, scib: str):
         self.prestados[dni]= Biblioteca
-class Bolsa:
-    pass
-class Ejemplar:
-    pass
+
