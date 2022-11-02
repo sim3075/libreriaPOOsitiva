@@ -26,33 +26,35 @@ class Bolsa:
         self.items = []
 
     def agregar_item(self, libro, cantidad):
+        item = Item(libro, cantidad)
         self.items.append(Item(libro, cantidad))
+        return  item
 
     def calcular_total(self):
         total = 0
         for item in self.items:
             total += item.calcular_subtotal()
-            return total
+        return total
 
     def quitar_item(self, scib):
-        self.item = [item for item in self.items if item.scib != scib]
+        self.item = [item for item in self.items if item.libro.scib != scib]
 class Usuario:
     def __init__(self, dni: str, nombre: str):
         self.dni: str = dni
         self.nombre: str = nombre
-        self.bolsa= Bolsa()
+
+
+    def __str__(self):
+        return f"DNI: {self.dni}---NOMBRE: {self.nombre}"
 
 
 
 class Biblioteca:
     def __init__(self):
         self.bolsa = Bolsa()
-        self.total_prestados = 0
-        self.total_vendidos = 0
-        self.total_devueltos= 0
-        self.usuarios = {}
         self.libros = {}
         self.__cargar_catalogo()
+        self.__cargar_usuarios()
 
 
     def __cargar_catalogo(self):
@@ -60,6 +62,24 @@ class Biblioteca:
             csv_data = csv.reader(file, delimiter=":")
             libros = map(lambda data: Libro(data[0], data[1], int(data[2])), csv_data)
             self.catalogo = {lib.scib: lib for lib in libros}
+
+
+    def __cargar_usuarios(self):
+        with open("data/usuarios.csv") as usuario:
+            csvData = csv.reader(usuario, delimiter=":")
+            usuarios = map(lambda data: Usuario(data[0], data[1]), csvData)
+            self.usuarios = {usuario.dni: usuario for usuario in usuarios}
+
+
+    def registrar_usuario(self, dni, nombre):
+        if  dni == "" or nombre == "":
+            raise  EspaciosVacios(f"Rellenar todos los campos")
+        if dni not in self.usuarios.keys():
+            usuario = Usuario(dni, nombre)
+            self.usuarios[dni] = Usuario(dni, nombre)
+            return usuario
+        else:
+            raise DniExistenteError(f"Ya existe un libro con el scib {dni}", dni)
 
     def adicionar_ejemplar_al_catalogo(self, scib, titulo, precio):
         if  scib == "" or titulo == "":
@@ -72,12 +92,13 @@ class Biblioteca:
             raise EjemplarExistenteError(f"Ya existe un libro con el scib {scib}", scib)
 
 
-    def agregar_ejemplar_bolsa(self, scib, cantidad):
-        if scib in self.catalogo.keys():
-            self.bolsa.agregar_item(self.libros[scib], cantidad)
+    def agregar_ejemplar_bolsa(self, libro, cantidad):
+        return self.bolsa.agregar_item(libro, cantidad)
 
-    def eliminar_libro(self, scib: str):
-        self.libros.pop(scib)
+
+
+    def eliminar_ejemplar_bolsa(self, scib):
+        self.bolsa.quitar_item(scib)
 
     def cargar_libros(self):
         self.libros["216676"]=Libro("216676",
@@ -123,6 +144,6 @@ class Prestado:
         self.mes= mes
         self.prestados={}
 
-    def agregar_a_prestados(self, dni:str, scib: str):
-        self.prestados[dni]= Biblioteca
+    def agregar_a_prestados(self, dni, scib):
+        self.prestados[dni]= scib
 

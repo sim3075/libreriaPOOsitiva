@@ -11,3 +11,9 @@ class EjemplarExistenteError(LibreriaError):
 class EspaciosVacios(LibreriaError):
     def __init__(self, mensaje):
         super().__init__(mensaje)
+
+class DniExistenteError(LibreriaError):
+
+    def __init__(self, mensaje, dni):
+        super().__init__(mensaje)
+        self.dni = dni
