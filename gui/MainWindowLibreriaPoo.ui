@@ -575,13 +575,6 @@ font:75 12pt &quot;Arial Narrow&quot;;
                  </property>
                  <layout class="QHBoxLayout" name="horizontalLayout_7">
                   <item>
-                   <widget class="QPushButton" name="btn_eliminarPrestamo">
-                    <property name="text">
-                     <string>Eliminar Prestamo</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
                    <widget class="QFrame" name="frame_6">
                     <property name="frameShape">
                      <enum>QFrame::StyledPanel</enum>
@@ -591,37 +584,9 @@ font:75 12pt &quot;Arial Narrow&quot;;
                     </property>
                     <layout class="QHBoxLayout" name="horizontalLayout_8">
                      <item>
-                      <widget class="QLabel" name="label_4">
-                       <property name="sizePolicy">
-                        <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                         <horstretch>0</horstretch>
-                         <verstretch>0</verstretch>
-                        </sizepolicy>
-                       </property>
-                       <property name="font">
-                        <font>
-                         <family>serifai</family>
-                         <pointsize>10</pointsize>
-                         <weight>50</weight>
-                         <italic>true</italic>
-                         <bold>false</bold>
-                        </font>
-                       </property>
+                      <widget class="QPushButton" name="btn_eliminarPrestamo">
                        <property name="text">
-                        <string>Total</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item>
-                      <widget class="QLineEdit" name="lineEdit_total_2">
-                       <property name="sizePolicy">
-                        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                         <horstretch>0</horstretch>
-                         <verstretch>0</verstretch>
-                        </sizepolicy>
-                       </property>
-                       <property name="readOnly">
-                        <bool>true</bool>
+                        <string>Eliminar Prestamo</string>
                        </property>
                       </widget>
                      </item>

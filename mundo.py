@@ -46,6 +46,24 @@ class Usuario:
 
     def __str__(self):
         return f"DNI: {self.dni}---NOMBRE: {self.nombre}"
+class Prestado:
+    def __init__(self):
+        self.prestados=[]
+
+    def agregar_item(self, dni, nombre):
+        item = Usuario(dni, nombre)
+        self.prestados.append(Usuario(dni, nombre))
+        return  item
+
+    def calcular_total(self):
+        total = 0
+        for item in self.prestados:
+            total += item.calcular_subtotal()
+        return total
+
+    def quitar_item(self, dni):
+        self.item = [item for item in self.prestados if item.libro.scib != dni]
+
 
 
 
@@ -55,6 +73,7 @@ class Biblioteca:
         self.libros = {}
         self.__cargar_catalogo()
         self.__cargar_usuarios()
+        self.prestamo = Prestado()
 
 
     def __cargar_catalogo(self):
@@ -100,50 +119,39 @@ class Biblioteca:
     def eliminar_ejemplar_bolsa(self, scib):
         self.bolsa.quitar_item(scib)
 
-    def cargar_libros(self):
-        self.libros["216676"]=Libro("216676",
-                                    "código limpio",
-                                    85000)
-
-        self.libros["786534"]=Libro("786534",
-                                    "lenguajes II",
-                                    32000)
-
-        self.libros["396784"]=Libro("396784",
-                                    "fundamentos de programación",
-                                    56000)
-
-    def buscar_libro(self, scib: str):
-       if scib in self.libros.keys():
-           return self.libros[scib]
-       else:
-           return None
-
-    def registrar_usuario(self, dni: str, nombre: str):
-        if self.buscar_usuario(dni) is None:
-            usuario = Usuario(dni, nombre)
-            self.usuarios[dni] = usuario
-            return True
-        else:
-            return False
-
-    def buscar_usuario(self, dni: str)-> Optional[Usuario]:
-        if dni in self.usuarios.keys():
-            return self.usuarios[dni]
-        else:
-            return None
+    # def cargar_libros(self):
+    #     self.libros["216676"]=Libro("216676",
+    #                                 "código limpio",
+    #                                 85000)
+    #
+    #     self.libros["786534"]=Libro("786534",
+    #                                 "lenguajes II",
+    #                                 32000)
+    #
+    #     self.libros["396784"]=Libro("396784",
+    #                                 "fundamentos de programación",
+    #                                 56000)
+    #
+    #
+    #
+    # def registrar_usuario(self, dni: str, nombre: str):
+    #     if self.buscar_usuario(dni) is None:
+    #         usuario = Usuario(dni, nombre)
+    #         self.usuarios[dni] = usuario
+    #         return True
+    #     else:
+    #         return False
+    #
+    # def buscar_usuario(self, dni: str)-> Optional[Usuario]:
+    #     if dni in self.usuarios.keys():
+    #         return self.usuarios[dni]
+    #     else:
+    #         return None
 
 
 
-class Prestado:
 
+    def agregar_a_prestados(self, prestamo, nombre):
+        self.prestamo.agregar_item(prestamo, nombre)
 
-    def __init__(self, scib: int, dia: int, mes: str):
-        self.scib= scib
-        self.dia= dia
-        self.mes= mes
-        self.prestados={}
-
-    def agregar_a_prestados(self, dni, scib):
-        self.prestados[dni]= scib
 
